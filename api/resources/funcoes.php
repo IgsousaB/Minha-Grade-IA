@@ -2,37 +2,14 @@
 
 //	TRANSFORM DAY END AND DAY START IN AN ARRAY OF EACH DAY
 
-	function conflict($schedule_data, $student_schedule){
+	function conflict($schedule_data, $days, $day_start, $day_end, $lunch, $dinner){
 
 
-		foreach($student_schedule as $key => $day){ // FOR EACH DAY
+		for($i = 0; $i < count($days); $i++){ // FOR EACH DAY
 
 			$match = 0;
 
-			if(empty($day)){
-
-				return 1;
-
-			} else if( schedule_data[$i]) {
-
-
-
-			}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			for($j = 0; $j < count($student_schedule) ; $j++){ // CHECK IF DISCIPLINE DAY MATCH ANY DAY IN THE GIVEN SCHEDULE 
+			for($j = 0; $j < count($days); $j++){ // CHECK IF DISCIPLINE DAY MATCH ANY DAY IN THE GIVEN SCHEDULE 
 
 				if($schedule_data[$j][day] == $days[$j]){
 					$match = 1;
@@ -75,7 +52,7 @@ if($schedule_data[$i][start_hour] >=  $day_end[0] ){ // IF THE DISCIPLINE STARTS
 */
 
 
-			if( !empty($lunch) ){ // IF THERE IS LUNCH TIME
+			if(!empty($lunch) ){ // IF THERE IS LUNCH TIME
 
 // IF LUNCH INTERVAL IS BIGGER THAN 2 HOURS AND DISCIPLINE STARTS AT 13:00
 
