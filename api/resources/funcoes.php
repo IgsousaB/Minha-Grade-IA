@@ -165,14 +165,14 @@ if($schedule_data[$i][start_hour] >=  $day_end[0] ){ // IF THE DISCIPLINE STARTS
 
 		} else	if(pg_num_rows($result) == 0){ // Se não há registros
 
-		//	echo "<br></br>0 records of " . $query . "<br></br>";
+			echo "<br></br>0 records of " . $query . "<br></br>";
 			return 0;
 
 		} else {
 
 			$data = pg_fetch_all($result);
 			
-		//	echo $query . " sucessfull!<br></br>";
+			echo $query . " sucessfull!<br></br>";
 			
 			return $data;
 
