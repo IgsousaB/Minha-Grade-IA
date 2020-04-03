@@ -19,49 +19,37 @@
 // RECEBE Variaveis GET
 // 
 
-    $courses = explode(" ", $_GET['courses']); // Remove space chars
-    $max_disciplines = $_GET['max_disciplines'];
+    $courses = explode(" ", $_POST['curso']); // Remove space chars
+    $max_disciplines = $_POST['max_disciplines'];
 
 
 	//GET Schedule
 
+	$seg = $_POST['seg'];
+	$discipline_limit = $_POST['a'];
+	echo "seg: " . $seg . "<br>";
+	echo "Discipline Limit: " . $discipline_limit . "<br>";
+	$days = explode(" ", $_POST['days']);
 
 
-	$student_schedule[0] = $_GET['seg'];
-	$student_schedule[1] = $_GET['ter'];
-	$student_schedule[2] = $_GET['qua'];
-	$student_schedule[3] = $_GET['qui'];
-	$student_schedule[4] = $_GET['sex'];
-	$student_schedule[5] = $_GET['sab'];
-	$student_schedule[6] = $_GET['seg'];
-
-/*
-
-	$day1 = explode(" ", $_GET['days']);
-
-
-	$day_start = extract_numbers($_GET['day_start']);
-	$day_end = extract_numbers($_GET['day_end']);
+	$day_start = extract_numbers($_POST['day_start']);
+	$day_end = extract_numbers($_POST['day_end']);
 	
-	$lunch_start = extract_numbers($_GET['lunch_start']);
-	$lunch_end = extract_numbers($_GET['lunch_end']);
-	$dinner_start = extract_numbers($_GET['dinner_start']);
-	$dinner_end = extract_numbers($_GET['dinner_end']);
-
-*/
-
-
+	$lunch = $_POST['lunch'];
+	$dinner = $_POST['dinner'];
+	echo "lunch: " . $lunch  . "<br>";
+    echo "dinner: " . $dinner  . "<br>";
 //
 // RESULTADO 
 //
 
 
-	if( // VERIFICA SE TODOS OS DADOS FORAM PREENCHIDOS
-		!empty($courses)  &&
+	if( // VERIFICA SE TODOS OS DADOS FORAM
+		!empty($courses) /*&&
 		!empty($day_start) &&
 		!empty($day_end) &&
 		!empty($days[0]) 
-	
+	*/
 	 ){ 
 	
 
@@ -71,6 +59,7 @@
 			
 			$course_id = $course_data[0][id]; // O ID DOS CURSOS PEDIDOS
 			$course_name = $course_data[0][name];
+
 
 			$course_disciplines_data = db_search($conn, "SELECT * FROM course_disciplines WHERE course_id = '$course_id'"); // COM OS IDS DOS CURSOS, BUSQUE AS DISCIPLINAS DO CURSO
 
@@ -98,19 +87,19 @@
 					$id = $discipline_classes_data[$j]['id']; // ? SERVER ERROR WHEN ARRAY IS USED
 
 					$discipline_class_offer_data = db_search($conn, "SELECT * FROM discipline_class_offers WHERE discipline_class_id = '$id'"); // BUSQUE NO BANCO
-					$discipline_class_vacancies = $discipline_class_ofer_data[$j]['vacancies']; // AS VAGAS
+					$discipline_class_vacancies = $$discipline_class_ofer_data[$j]['vacancies']; // AS VAGAS
 
 
 
 					$schedule_data = db_search($conn, "SELECT * FROM schedules WHERE discipline_class_id = '$id' "); // E BUSQUE NO BANCO OS HORARIOS
 
 
-					if(conflict($schedule_data, $student_schedule) ){  // SE NÃO ATENDE OS HORARIOS
+/*					if(conflict($schedule_data, $days, $day_start, $day_end, $lunch, $dinner) ){  // SE NÃO ATENDE OS HORARIOS
 
 						continue; // VOLTE E TENTE COM OUTRA TURMA
 
 					} else {
-
+*/
 						$discipline_class_code = $discipline_classes_data[$j]['class_number']; // PEGUE O CODIGO DA TURMA
 
 
@@ -141,7 +130,7 @@
 							echo "<br><br>";
 							echo "<br><br>";
 
-						}
+//						}
 
 
 					}
