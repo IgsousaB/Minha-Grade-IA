@@ -19,42 +19,64 @@ include_once 'resources/funcoes.php';
 // RECEBE Variaveis GET
 // 
 
-	$table = $_GET['table'];
+	$course = $_GET['course'];
+	
+	$max_disciplines = $_GET['max_disciplines'];
+ 
+ 	$days = explode(",", $_GET['days']); 
+
+ 	//GET Schedule
+	$day_start = extract_numbers($_GET['day_start']);
+	$day_end = extract_numbers($_GET['day_end']);
+
+	$start_hour = $day_start[0];
+	$start_minute = $day_start[1];
+	$end_hour = $day_end[0];
+	$end_minute = $day_end[1];
 
 
 //
 // RESULTADO 
 //
 
-	if(isset($_GET['table']) ){ // Verifica se a foi pedida tabela
+
+	// GET DISCIPLINE_CLASS_ID FROM ALL DISCIPLINES WITHIN SCHEDULE
+	$data = db_search($conn, "SELECT discipline_class_id FROM schedules WHERE (start_hour >= '$start_hour' AND start_minute >= '$start_minute') AND (end_hour <= '$end_hour' AND end_minute <= '$end_minute' ) " );
+
 	
+	$discipline_class_id = $data[0]['discipline_class_id'];
 
-		$result = pg_query($conn, "SELECT * FROM $table"); // Recebe a solicitação do banco
 
-		if(!$result){	// Se não houve resultado
 
-			echo "query did not execute";
+	// USE DISCIPLINE_CLASS_ID TO GET DISCIPLINE IDs and DISCIPLINE_CLASSES
+	$data = db_search($conn, "SELECT discipline_id FROM discipline_classes WHERE id = '$discipline_class_id' " );
+	$discipline_id = $data[0]['discipline_id'];
+	$discipline_class = $data[0]['class_number'];
 
-		} else	if(pg_num_rows($result) == 0){ // Se não há registros
 
-			echo "0 records";
+
+	//USE DISCIPLINE_IDs TO GET DISCIPLINE INFO
+	$data = db_search($conn, "SELECT * FROM disciplines WHERE id = '$discipline_id' " );
+
+
+	//PRINT DISCIPLINE_INFO AND CLASSES
+		foreach ($data as $datarow => $dataarray) {
+
+    			show_result("disciplines", $dataarray);
+    		//	echo $discipline_class;
+		}
+
+
+
+	if(isset($_GET['course']) ){ // Verifica se a foi pedida tabela
+
+		$data = db_search($conn, "SELECT * FROM courses WHERE name = '$course'");
 		
-		} else {
-
-			$row = pg_fetch_array($result)) { // transforma resultado em array a cada linha
-
-
-				// MOSTRA RESULTADO 
-
-				show_result($table, $row); // formata e imprime resultados
-
-
-			}
-		} 
+		$curriculum = $data[0][curriculum];
 
 	}
 
-
+	if(isset($_GET['']))
 
 
 ?>
