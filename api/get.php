@@ -25,21 +25,38 @@
 
 	//GET Schedule
 
-	$days = explode(" ", $_GET['days']);
+
+
+	$student_schedule[0] = $_GET['seg'];
+	$student_schedule[1] = $_GET['ter'];
+	$student_schedule[2] = $_GET['qua'];
+	$student_schedule[3] = $_GET['qui'];
+	$student_schedule[4] = $_GET['sex'];
+	$student_schedule[5] = $_GET['sab'];
+	$student_schedule[6] = $_GET['seg'];
+
+/*
+
+	$day1 = explode(" ", $_GET['days']);
 
 
 	$day_start = extract_numbers($_GET['day_start']);
 	$day_end = extract_numbers($_GET['day_end']);
 	
-	$lunch = $_GET['lunch'];
-	$dinner = $_GET['dinner'];
+	$lunch_start = extract_numbers($_GET['lunch_start']);
+	$lunch_end = extract_numbers($_GET['lunch_end']);
+	$dinner_start = extract_numbers($_GET['dinner_start']);
+	$dinner_end = extract_numbers($_GET['dinner_end']);
+
+*/
+
 
 //
 // RESULTADO 
 //
 
 
-	if( // VERIFICA SE TODOS OS DADOS FORAM
+	if( // VERIFICA SE TODOS OS DADOS FORAM PREENCHIDOS
 		!empty($courses)  &&
 		!empty($day_start) &&
 		!empty($day_end) &&
@@ -88,7 +105,7 @@
 					$schedule_data = db_search($conn, "SELECT * FROM schedules WHERE discipline_class_id = '$id' "); // E BUSQUE NO BANCO OS HORARIOS
 
 
-					if(conflict($schedule_data, $days, $day_start, $day_end, $lunch, $dinner) ){  // SE NÃO ATENDE OS HORARIOS
+					if(conflict($schedule_data, $student_schedule) ){  // SE NÃO ATENDE OS HORARIOS
 
 						continue; // VOLTE E TENTE COM OUTRA TURMA
 
