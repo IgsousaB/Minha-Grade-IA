@@ -1,26 +1,60 @@
-<?php 
+<?php
 
-//Define param banco
-$con = mysqli_connect('localhost','igor','0321grade','api_db');
-//muda charset
-$con->set_charset("utf8");
+
+include_once 'resources/funcoes.php';
 
 
 
-//localhost/?discipline=adm202&professor=adriano
+//
+// BANCO DE DADOS
+//
+
+	$conn = pg_connect("host=localhost dbname=meuhorario_dev user=meuhorario password=123456")  or die("Can't connect to database".pg_last_error()); // Conecta banco de dados
+	pg_set_client_encoding ([$conn], "utf8" ); 	// muda charset
 
 
-$discipline = $_GET['discipline'];
-$professor = $_GET['professor'];
-
-echo $discipline;
-echo $professor;
 
 
+//
+// RECEBE Variaveis GET
+// 
 
-$result = mysqli_query($con, "INSERT INTO `products` (`name`, `description`, `price`, `category_id`, `created`, `modified`) VALUES ('$discipline' , '$professor', '9417', '3' , '2014-06-01 01:12:26', '2014-05-31 17:12:26')");
-if($con->query($result) === TRUE) {
-	echo "Foi";
-}
+	$table = $_GET['table'];
+
+
+//
+// RESULTADO 
+//
+
+	if(isset($_GET['table']) ){ // Verifica se a foi pedida tabela
+	
+
+		$result = pg_query($conn, "SELECT * FROM $table"); // Recebe a solicitação do banco
+
+		if(!$result){	// Se não houve resultado
+
+			echo "query did not execute";
+
+		} else	if(pg_num_rows($result) == 0){ // Se não há registros
+
+			echo "0 records";
+		
+		} else {
+
+			$row = pg_fetch_array($result)) { // transforma resultado em array a cada linha
+
+
+				// MOSTRA RESULTADO 
+
+				show_result($table, $row); // formata e imprime resultados
+
+
+			}
+		} 
+
+	}
+
+
+
 
 ?>

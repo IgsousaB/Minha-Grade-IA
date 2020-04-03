@@ -1,5 +1,113 @@
 <?php
 
+	function conflict($schedule_data, $lunch_start, $lunch_end, $dinner_start, $dinner_end, $day_start, $day_end){
+
+		if( !empty($lunch_start) && !empty($lunch_end) ){
+
+
+			if(
+				$schedule_data[0][start_hour] >=  $lunch_start[0] &&
+				$schedule_data[0][start_hour] <=  $lunch_end[0]
+			){
+
+				if(
+					$schedule_data[0][start_minute] >= $lunch_start[1] &&
+					$schedule_data[0][start_minute] <= $lunch_start[1]
+
+				){
+					 return 1; // CONFLICT
+				}
+
+			}
+
+		}
+		
+
+		if( !empty($dinner_start) && !empty($dinner_end) ) {
+
+			if( // IF THE DISCÍPLINE IS WITHIN DINNER
+
+				$schedule_data[0][start_hour] >=  $dinner_start[0] &&
+				$schedule_data[0][start_hour] <=  $dinner_end[0]
+			){
+
+				if(
+					$schedule_data[0][start_minute] >= $dinner_start[1] &&
+					$schedule_data[0][start_minute] <= $dinner_start[1]
+
+				){
+					 return 1;
+				}
+
+			}
+
+		
+		} 
+
+/* // IF DISCIPLINE ENDS BEFORE STUDENT LIMITS
+
+		if( $schedule_data[0][end_hour] <  $day_start[0] ){ 
+
+			return 1;
+
+		} else if( 
+
+			$schedule_data[0][end_hour] =  $day_start[0] &&
+			$schedule_data[0][end_minute] < $day_start[1]
+		
+		){
+		
+			 return 1;
+
+		}
+
+
+// IF THE DISCIPLINE STARTS AFTER STUDENT LIMITS
+
+		if(
+
+			$schedule_data[0][start_hour] >  $day_end[0] ){
+
+			return 1;
+
+		}
+
+		if(
+			$schedule_data[0][start_hour] =  $day_end[0] &&
+			$schedule_data[0][start_minute] > $day_end[1]
+		){
+			 return 1;
+		}
+
+
+
+*/
+		return 0;
+
+/*
+//IF THE DISCIPLINE STARTS BEFORE LUNCH
+		if($schedule_data[0][end_hour] <  $lunch_start[0]){ return 1;}
+
+		if($schedule_data[0][end_hour] = $lunch_start[0] && $schedule_data[0][end_minute] < $lunch_start[1]){ return 1;}
+
+//OR IF THE DISCIPLINE STARTS AFTER LUNCH
+		if($schedule_data[0][start_hour] > $lunch_end[0]){ return 1; }
+
+		if($schedule_data[0][start_hour] = $lunch_end[0] && $schedule_data[0][end_minute] > $lunch_end[1]){ return 1;}
+
+//IF THE DISCIPLINE STARTS BEFORE DINNER
+		if($schedule_data[0][end_hour] <  $dinner_start[0]){ return 1;}
+
+		if($schedule_data[0][end_hour] = $dinner_start[0] && $schedule_data[0][end_minute] < $dinner_start[1]){ return 1;}
+
+//OR IF THE DISCIPLINE STARTS AFTER DINNER
+		if($schedule_data[0][start_hour] > $dinner_end[0]){ return 1; }
+
+		if($schedule_data[0][start_hour] = $dinner_end[0] && $schedule_data[0][end_minute] > $dinner_end[1]){ return 1;}
+
+*/
+	}
+
 	function make_days_query($days){
 
 
