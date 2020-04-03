@@ -1,0 +1,249 @@
+.move{
+position: relative;
+left: -30px;
+font-family: 'Quicksand';font-size: 17px;
+color: black;
+}
+.moves{
+position: relative;
+float: left;
+margin-top: -280px;
+margin-left: 600px;
+font-family: 'Quicksand';
+}
+.move1{
+position: relative;
+font-family: 'Quicksand';font-size: 17px;
+color: black;
+left: 100px;
+}
+.move2{
+position: relative;
+font-family: 'Quicksand';font-size: 17px;
+color: black;
+left: 300px;
+}
+.move3{
+position: relative;
+font-family: 'Quicksand';font-size: 17px;
+color: black;
+left: 350px;
+}
+.letra{
+font-family: 'Quicksand';font-size: 40px;
+color: black;
+}
+.letra3{
+font-family: 'Quicksand';font-size: 25px;
+color: black;
+}
+.letra2{
+font-family: 'Quicksand';font-size: 20px;
+color: black;
+position: relative;
+padding-left: 30px;
+}
+.column {
+  font-family: 'Quicksand';font-size: 12px;
+  color: black;
+  float: left;
+  width: 15%;
+  padding-right: 1%;
+  padding-left: 2%;
+  margin-top: -23px; 
+}
+.ggwp {
+position: relative;
+top: -6px;
+}
+.ggwp1 {
+position: relative;
+top: -26px;
+}
+.ggwp2 {
+position: relative;
+left: 924px;
+top: -626px;
+}
+.ggwp3 {
+position: relative;
+left: 1209px;
+top: -657px;
+}
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.vl {
+  border-left: 1px solid grey;
+  height: 150px;
+  width: 10%;
+  position: static;
+  left: -5%;
+  margin-left: -212px;
+  margin-top: -60px;
+}
+.v2 {
+  border-left: 1px solid grey;
+  height: 150px;
+  width: 10%;
+  position: static;
+  left: -5%;
+  margin-left: 52px;
+  margin-top: -115px;
+}
+.v3 {
+  border-left: 1px solid grey;
+  height: 150px;
+  width: 10%;
+  position: static;
+  left: -5%;
+  margin-left: 369px;
+  margin-top: -148px;
+}
+.v4 {
+  border-left: 1px solid grey;
+  height: 150px;
+  width: 10%;
+  position: static;
+  left: -5%;
+  margin-left: 672px;
+  margin-top: -148px;
+}
+.v5 {
+  border-left: 1px solid grey;
+  height: 150px;
+  width: 10%;
+  position: static;
+  left: -5%;
+  margin-left: 974px;
+  margin-top: -148px;
+}
+.v6 {
+  border-left: 2px solid grey;
+  height: 150px;
+  width: 10%;
+  position: static;
+  left: -5%;
+  margin-left: 1284px;
+  margin-top: -148px;
+}
+.v7 {
+  border-left: 4px solid #cd7706;
+  height: 380px;
+  width: 10%;
+  position: static;
+  left: -5%;
+  margin-left: 862px;
+  margin-top: -790px;
+}
+.v8 {
+  border-left: 4px solid #5446b7;
+  height: 380px;
+  width: 10%;
+  position: static;
+  left: -5%;
+  margin-left: 1144px;
+  margin-top: -380px;
+}
+.div1 {
+  width: 15%
+  padding: 50px;
+  margin: 20px;
+}
+hr { 
+  position: static;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  border-style: inset;
+  border-width: 2px;
+  color: #000000;
+  border-top: 1px solid black;
+}
+.dot {
+  height: 125px;
+  width: 125px;
+  background-color: #000000;
+  border-radius: 50%;
+  display: inline-block;
+}
+button {
+  position: relative;
+}
+body {
+   font-family: 'Quicksand';
+}
+#box
+{
+    width:300px;
+    height:30px;
+    background-color:#FFFAFA;
+    border-radius: 16px;
+}
+#box1
+{
+    width:984px;
+    height:30px;
+    background-color:#FFFAFA;
+    border-radius: 16px;
+	color: #344253;
+}
+#box2
+{
+    width:180px;
+    height:30px;
+    background-color:#FFFAFA;
+    border-radius: 16px;
+}
+#box3 {     
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    margin: 0 13px;
+    font-weight: 700;	
+}
+#box4 {     
+    width:66px;
+    height:30px;
+    background-color:#FFFAFA;
+    border-radius: 16px;
+    margin: 0 2px;	
+}
+#buttonx
+{
+    width:45px;
+    height:30px;
+    background-color:#436EEE;
+	border: none;
+    border-radius: 16px;
+	color: #FFFAFA;
+}
+#buttonnextr
+{
+    width:117px;
+    height:53px;
+    background-color:#436EEE;
+	border: none;
+    border-radius: 16px;
+	color: #FFFAFA;
+}
+#buttonok
+{
+    width:62px;
+    height:30px;
+    background-color:#436EEE;
+	border: none;
+    border-radius: 16px;
+	color: #FFFAFA;
+}
+#pointer {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
