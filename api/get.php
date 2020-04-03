@@ -9,7 +9,7 @@ include_once 'resources/funcoes.php';
 // BANCO DE DADOS
 //
 
-	$conn = pg_connect("host=localhost dbname=meuhorario_dev user=meuhorario password=123456")  or die("Can't connect to database".pg_last_error()); // Conecta banco de dados
+	$conn = pg_connect("host=localhost dbname=meuhorario_dev user=meuhorario password=123456") or die ("Can't connect to database". pg_last_error()); // Conecta banco de dados
 	pg_set_client_encoding ([$conn], "utf8" ); 	// muda charset
 
 
@@ -18,25 +18,31 @@ include_once 'resources/funcoes.php';
 //
 // RECEBE Variaveis GET
 // 
-    $course_name = $_GET['course']; // Remove space chars
+    $courses = explode(" ", $_GET['courses']); // Remove space chars
 
 	$max_disciplines = $_GET['max_disciplines'];
 
 
 	 //GET Schedule
- 	
+
+	$days = explode(" ", $_GET['days']);
+
+
 	$day_start = extract_numbers($_GET['day_start']);
 	$day_end = extract_numbers($_GET['day_end']);
-
-	$start_hour = $day_start[0];
-	$start_minute = $day_start[1];
-	$end_hour = $day_end[0];
-	$end_minute = $day_end[1];
 	
+	$lunch = explode("-", $_GET['lunch'] );
+	$lunch_start = extract_numbers($lunch[0]);
+	$lunch_end = extract_numbers($lunch[1]);
 
-	//To Implement
-	$days = explode(",", $_GET['days']);
-	$lunch = $_GET['lunch'];
+	$dinner = explode("-", $_GET['dinner'] );
+	$dinner_start = extract_numbers($dinner[0]);
+	$dinner_end = extract_numbers($dinner[1]);
+
+
+	//make_schedule($days, $day_start, $day_end, $lunch_start, $lunch_end, $dinner_start, $dinner_end);
+
+
 	$dinner = $_GET['dinner'];
 
 //
@@ -44,95 +50,126 @@ include_once 'resources/funcoes.php';
 //
 
 
-	if(isset($_GET['course']) ){ // VERIFICA SE FOI DADOS CURSOS
+	if( // VERIFICA SE TODOS OS DADOS FORAM
+		!empty($courses) &&
+		!empty($day_start) &&
+		!empty($day_end) &&
+		!empty($days[0])
+	 ){ 
 
-		$course_data = db_search($conn, "SELECT * FROM courses WHERE name LIKE '%$course_name%'"); // BUSQUE NO BANCO
+	 	foreach($courses as $key => $course_name){
+
+		$course_data = db_search($conn, "SELECT * FROM courses WHERE name LIKE '$course_name%'"); // BUSQUE NO BANCO
 		
 		$course_id = $course_data[0][id]; // O ID DOS CURSOS PEDIDOS
 
 
-		$course_disciplines_data = db_search($conn, "SELECT * FROM course_disciplines WHERE course_id = '$course_id'"); // COM OS IDS DOS CURSOS, BUSQUE AS DISCIPLINAS
+		$course_disciplines_data = db_search($conn, "SELECT * FROM course_disciplines WHERE course_id = '$course_id'"); // COM OS IDS DOS CURSOS, BUSQUE AS DISCIPLINAS DO CURSO
 
 
-		//var_dump($course_disciplines_data);
-		foreach ($course_disciplines_data as $row => $array){ // PARA CADA DISCIPLINA DO CURSO
-
-			$discipline_nature = $array['nature']; // PEGUE A NATUREZA
-			$discipline_semester = $array['semester']; // PEGUE O SEMESTRE
+			for ($i = 0; $i < count($course_disciplines_data); $i++){ // PARA CADA DISCIPLINA DO CURSO
 
 
+				$array = $course_disciplines_data[$i];
 
 
-
-
+				$discipline_nature = $array['nature']; // PEGUE A NATUREZA
+				$discipline_semester = $array['semester']; // PEGUE O SEMESTRE
 
 
 
+				$discipline_data = db_search($conn, "SELECT * FROM disciplines WHERE id = '$array[discipline_id]'"); // COM O ID, BUSQUE AS INFORMAÇÕES DA DISCIPLINA
+				$discipline_classes_data = db_search($conn, "SELECT * FROM discipline_classes WHERE discipline_id = '$array[discipline_id]'"); // E BUSQUE NO BANCO SUAS TURMAS
+				
+
+		
+				for($j = 0; $j < count($discipline_classes_data); $j++){ // PARA CADA TURMA
+				
+
+
+					$id = $discipline_classes_data[$j]['id']; // SERVER ERROR WHEN ARRAY IS USED
+
+//					$discipline_class_offer_data = db_search($conn, "SELECT * FROM discipline_class_offers WHERE discipline_class_id = '$id'"); // BUSQUE NO BANCO
+//					$discipline_class_vacancies = $$discipline_class_ofer_data[$j]['vacancies']; // AS VAGAS
+
+
+					
+					$days_query = make_days_query($days);
+					$schedule_data = db_search($conn, 
+						"SELECT * FROM schedules WHERE (discipline_class_id = '$id')
+												   AND (
+												   			 (start_hour >= '$day_start[0]'
+												    	 OR  (start_hour = '$day_start[0]' AND  start_minute >= '$day_start[1]'))
+												   		 AND (end_hour <= '$day_end[0]'
+												    	 OR  (end_hour = '$day_end[0]' AND  end_minute <= '$day_end[1]'))
+												   		 AND ($days_query)
+												   	   )"); // E BUSQUE NO BANCO OS HORARIOS
+
+
+
+					if(!$schedule_data){ // SE NÃO ATENDE OS HORARIOS TENTE COM OUTRA TURMA
+
+						continue;
+					
+					} else { // SE ATENDE OS HORARIOS
+
+						$discipline_class_code = $discipline_classes_data[$j]['class_number']; // PEGUE O CODIGO DA TURMA
+
+
+						for($k = 0; $k < count($schedule_data); $k++){ // PARA CADA HORARIO
+
+							$discipline_class_id = $schedule_data[$k]['discipline_class_id']; // PEGUE O ID DA TURMA
+							$discipline_day = decide_day($schedule_data[$k]['day']); // O DIA
+							$discipline_class_count = $schedule_data[$k]['class_count']; // NUMERO DE TURMAS
+							
+							$discipline_start_hour = $schedule_data[$k]['start_hour']; // PEGUE OS HORÁRIOS
+							$discipline_start_minute = $schedule_data[$k]['start_minute'];
+							$discipline_end_hour = $schedule_data[$k]['end_hour'];
+							$discipline_end_minute = $schedule_data[$k]['end_minute'];
+
+
+							// MOSTRE A DISCIPLINA
+							echo "<p style='color: #FF08E3;'>";
+							echo "Discipline Info <br>";
+							echo "Nature: " . $discipline_nature;
+							if(!empty($discipline_semester) ){ echo " | Semester: " . $discipline_semester; }
+							show_result("disciplines", $discipline_data[0]); // MOSTRE OS DADOS
+							
+							echo "Class Info <br>";
+							echo "Class Code: " . $discipline_class_code . "<br>";
+							echo "Start: " . $discipline_start_hour . ":" . $discipline_start_minute . "<br>";
+							echo "End: " . $discipline_end_hour . ":" . $discipline_end_minute . "<br>";
+							echo "Day: " . $discipline_day . "<br>";
+							echo "Number of Classes: " . $discipline_class_count . "<br>";
+							echo "Class Vacancies: " . $discipline_class_vacancies. "<br>";
+							
+
+							echo "<br><br>";
+							echo "<br><br>";
+							
 
 
 
 
+						}
 
 
-			$discipline_data = db_search($conn, "SELECT * FROM disciplines WHERE id = '$array[discipline_id]'"); // COM O ID, BUSQUE SUAS INFORMAÇÕES
+					}
 
-			//show_data($discipline_data); // MOSTRE OS DADOS
+
+				}
+
+
+			}
+
 		}
 
-/*
-		
 
 	} else {
 
-		echo "Not enough data to proceed. Please enter Courses.<br></br>";
-		http_response_code(400);
-		die;
-
+			echo "Not enough information. Please fill in courses, days, day_start and day_end. ";
+			http_response_code(400);
+		
 	}
 
-
-	//  COM OS HORARIOS LIMITE, BUSQUE NO BANCO TODAS OS HORARIOS DAS DISCIPLINAS
-//** FALTA DIAS LIMITE
-	$discipline_schedules = db_search($conn, "SELECT * FROM schedules WHERE (start_hour >= '$start_hour' AND start_minute >= '$start_minute') AND (end_hour <= '$end_hour' AND end_minute <= '$end_minute' ) " );
-
-
-	foreach($discipline_schedules as $row => $array){ // PARA CADA HORARIO
-
-		$discipline_class_id = $array['discipline_class_id']; // PEGUE O ID DA TURMA
-		$discipline_day = $array['day']; // O DIA
-		$discipline_class_count = $array['class_count']; // NUMERO DE TURMAS
-
-
-		$discipline_classes = db_search($conn, "SELECT * FROM discipline_classes WHERE id = '$discipline_class_id' " ); // COM O ID DA TURMA, BUSQUE NO BANCO
-		$discipline_id = $discipline_classes[0]['discipline_id']; // O ID DA DISCIPLINA
-		$discipline_class_code = $discipline_classes[0]['class_number']; // E O CODIGO DA TURMA
-
-
-
-		$discipline_info = db_search($conn, "SELECT * FROM disciplines WHERE id = '$discipline_id' " ); //AGORA, COM O ID DA DISCIPLINA, BUSQUE SUAS INFORMAÇÕES
-
-
-		foreach ($discipline_info as $datarow => $dataarray) { // PARA CADA DISCIPLINA
-
-    			show_result("disciplines",$dataarray, $discipline_class, $discipline_day, $discipline_class_count, $discipline_class_code); // MOSTRE OS DADOS
-
-		}
-
-	}
-
-
-
-	//USE DISCIPLINE_IDs TO GET DISCIPLINE INFO
-	$data = db_search($conn, "SELECT * FROM disciplines WHERE id = '$discipline_id' " );
-
-
-	//PRINT DISCIPLINE_INFO AND CLASSES
-		foreach ($data as $datarow => $dataarray) {
-
-    			show_result("disciplines", $dataarray);
-    		//	echo $discipline_class;
-		}
-
-
-*/
 ?>
