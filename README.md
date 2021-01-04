@@ -1,4 +1,4 @@
-# MinhaGradeIA
+# Minha Grade IA
 
 ## Sobre o Projeto
 
